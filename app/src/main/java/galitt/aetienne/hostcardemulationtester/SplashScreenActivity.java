@@ -27,7 +27,7 @@ public class SplashScreenActivity extends Activity {
         setContentView(R.layout.activity_splash_screen);
 
         TextView texteView = (TextView) findViewById(R.id.textView);
-        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/Eclipse.ttf");
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/quizma.otf");
         texteView.setTypeface(font);
 
     }
