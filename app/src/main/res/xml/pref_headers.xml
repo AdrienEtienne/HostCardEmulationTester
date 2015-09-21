@@ -7,11 +7,7 @@
         android:title="@string/pref_header_general" />
 
     <header
-        android:fragment="galitt.aetienne.hostcardemulationtester.SettingsActivity$NotificationPreferenceFragment"
-        android:title="@string/pref_header_notifications" />
-
-    <header
-        android:fragment="galitt.aetienne.hostcardemulationtester.SettingsActivity$DataSyncPreferenceFragment"
-        android:title="@string/pref_header_data_sync" />
+        android:fragment="galitt.aetienne.hostcardemulationtester.SettingsActivity$AboutPreferenceFragment"
+        android:title="@string/pref_header_about" />
 
 </preference-headers>
