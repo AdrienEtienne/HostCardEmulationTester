@@ -1,11 +1,13 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:background="#ffffff"
+    android:layout_height="match_parent"
     tools:context=".SplashScreenActivity"
     android:paddingTop="80dp"
     android:paddingBottom="40dp"
     android:paddingLeft="40dp"
-    android:paddingRight="40dp">
+    android:paddingRight="40dp"
+    android:background="@drawable/background"
+    android:id="@+id/splash_screen">
 
 
     <LinearLayout
@@ -16,13 +18,13 @@
         android:weightSum="1">
 
         <TextView
-            android:layout_width="fill_parent"
+            android:layout_width="303dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/app_name"
-            android:id="@+id/textView"
+            android:id="@+id/textViewAppName"
             style="@style/Base.TextAppearance.AppCompat"
-            android:textColor="#000000"
+            android:textColor="#FF3C3C3C"
             android:textSize="40sp" />
 
         <LinearLayout
@@ -38,6 +40,48 @@
                 android:textColor="#000" />
 
         </LinearLayout>
+
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="78dp"
+            android:layout_gravity="center_horizontal">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_by"
+                    android:id="@+id/textView2"
+                    android:textSize="20dp"
+                    android:layout_gravity="center"
+                    android:padding="10dp"
+                    android:textColor="#FF3C3C3C" />
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageView"
+                    android:src="@drawable/galitt"
+                    android:contentDescription="@string/lbl_description_logo" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_galitt"
+                    android:id="@+id/textView3"
+                    android:textSize="20dp"
+                    android:layout_gravity="center"
+                    android:padding="10dp"
+                    android:textColor="#FF3C3C3C" />
+
+            </TableRow>
+
+        </TableLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -52,7 +96,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|bottom"
             android:text="@string/lbl_main_version"
-            android:textColor="#777" />
+            android:textColor="#FF3C3C3C" />
 
     </LinearLayout>
+
 </FrameLayout>
