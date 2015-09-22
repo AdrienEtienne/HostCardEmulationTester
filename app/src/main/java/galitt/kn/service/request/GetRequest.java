@@ -32,7 +32,7 @@ public class GetRequest extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        mCallback.onTaskComplete(result);
+        mCallback.onRequestComplete(result);
         super.onPostExecute(result);
     }
 }

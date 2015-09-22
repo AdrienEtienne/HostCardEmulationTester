@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import galitt.kn.service.hce.Transaction;
+import galitt.kn.service.authentication.User;
 
 /**
  * Created by Adrien on 22/09/2015.
@@ -41,6 +42,23 @@ public class ObjectFromResponseFactory {
             Map.Entry entry = (Map.Entry)iter.next();
             if(entry.getKey().toString().equals("apdu")){
                 t = new Transaction((entry.getValue().toString()));
+
+                return t;
+            }
+        }
+
+        return null;
+    }
+
+    static public User GetUser(String jsonText) throws ParseException{
+        User t;
+
+        Map jsonMap = GetMapFromText(jsonText);
+        Iterator iter = jsonMap.entrySet().iterator();
+        while(iter.hasNext()){
+            Map.Entry entry = (Map.Entry)iter.next();
+            if(entry.getKey().toString().equals("name")){
+                t = new User((entry.getValue().toString()));
 
                 return t;
             }
