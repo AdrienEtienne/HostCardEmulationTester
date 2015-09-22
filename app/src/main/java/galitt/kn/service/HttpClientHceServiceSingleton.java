@@ -17,14 +17,14 @@ import galitt.kn.service.request.GetResponseCallback;
  * Created by Adrien on 22/09/2015.
  */
 public class HttpClientHceServiceSingleton extends Application{
-    public static final String TAG = HttpClientHceServiceSingleton.class.getSimpleName();
+    private static final String TAG = HttpClientHceServiceSingleton.class.getSimpleName();
     private final String HTTP_PRE_ADDRESS = "http://";
     private final String API_USER = "/api/users";
-    private static String mAddress = "127.0.0.1";
-    private static int mPort = 8080;
+    private String mAddress = "127.0.0.1";
+    private int mPort = 8080;
 
     private RequestQueue mRequestQueue;
-    private static HttpClientHceServiceSingleton mInstance;
+    private static HttpClientHceServiceSingleton mInstance = new HttpClientHceServiceSingleton();
 
     protected enum Apis{
         AUTHENTICATION("/api/users"),
@@ -39,9 +39,17 @@ public class HttpClientHceServiceSingleton extends Application{
         public String getValue() {
             return this.value;
         }
-    };
+    }
+
+    private HttpClientHceServiceSingleton(){
+        this.mAddress = "127.0.0.1";
+    }
 
     public static synchronized HttpClientHceServiceSingleton getInstance() {
+        if(mInstance == null){
+            mInstance = new HttpClientHceServiceSingleton();
+        }
+
         return mInstance;
     }
 
@@ -53,21 +61,21 @@ public class HttpClientHceServiceSingleton extends Application{
         return mRequestQueue;
     }
 
-    public String GetAddress(){
-        return HTTP_PRE_ADDRESS + this.mAddress;
+    public String getAddress(){
+        return HTTP_PRE_ADDRESS + mAddress;
     }
 
-    public int GetPort(){
+    public int getPort(){
         return this.mPort;
     }
 
-    public void SetAddressAndPort(String address, int port){
-        this.mAddress = address;
-        this.mPort = port;
+    public void setAddressAndPort(String address, int port){
+        mAddress = address;
+        mPort = port;
     }
 
     protected String getUrl(Apis api, String arguments) {
-        return HTTP_PRE_ADDRESS + mAddress + ":" + mPort + api.getValue() + "/" + arguments;
+        return getAddress() + ":" + mPort + api.getValue() + "/" + arguments;
     }
 
     @Override
@@ -82,7 +90,7 @@ public class HttpClientHceServiceSingleton extends Application{
         getRequestQueue().add(req);
     }
 
-    public void cancelPendingRequests(Object tag) {
+    public void cancelPendingRequests(String tag) {
         if (mRequestQueue != null) {
             mRequestQueue.cancelAll(tag);
         }
@@ -99,9 +107,9 @@ public class HttpClientHceServiceSingleton extends Application{
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-
                         // Display the first 500 characters of the response string.
                         cbSuccess.onUserReceived(new User(response));
+
                     }
                 }, new Response.ErrorListener() {
             @Override

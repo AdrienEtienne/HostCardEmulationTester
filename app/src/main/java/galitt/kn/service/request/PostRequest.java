@@ -30,6 +30,7 @@ public class PostRequest extends AsyncTask<String, String, String>{
     protected String doInBackground(String... arg0) {
         //Use HTTP client API's to do the POST
         //Return response.
+        return "response";
     }
 
     @Override
