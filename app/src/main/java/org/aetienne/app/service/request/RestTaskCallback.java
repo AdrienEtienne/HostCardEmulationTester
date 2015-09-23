@@ -1,4 +1,4 @@
-package galitt.aetienne.hostcardemulationtester.service.request;
+package org.aetienne.app.service.request;
 
 /**
  * Created by Adrien on 22/09/2015.

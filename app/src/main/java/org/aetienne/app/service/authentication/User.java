@@ -1,4 +1,4 @@
-package galitt.aetienne.hostcardemulationtester.service.authentication;
+package org.aetienne.app.service.authentication;
 
 import com.google.gson.annotations.SerializedName;
 

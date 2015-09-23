@@ -1,4 +1,4 @@
-package galitt.aetienne.hostcardemulationtester.activity;
+package org.aetienne.app.activity;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 
-import galitt.aetienne.hostcardemulationtester.R;
+import org.aetienne.app.R;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On

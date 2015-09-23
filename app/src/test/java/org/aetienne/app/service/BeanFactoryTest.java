@@ -1,4 +1,4 @@
-package galitt.aetienne.hostcardemulationtester.service;
+package org.aetienne.app.service;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -6,7 +6,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import galitt.aetienne.hostcardemulationtester.service.hce.Transaction;
+import org.aetienne.app.service.hce.Transaction;
 
 import static org.junit.Assert.*;
 

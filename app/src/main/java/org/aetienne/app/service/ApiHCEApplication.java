@@ -1,4 +1,4 @@
-package galitt.aetienne.hostcardemulationtester.service;
+package org.aetienne.app.service;
 
 import android.app.Application;
 import android.text.TextUtils;
@@ -15,10 +15,10 @@ import com.android.volley.toolbox.Volley;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import galitt.aetienne.hostcardemulationtester.service.request.GetTask;
-import galitt.aetienne.hostcardemulationtester.service.request.RestTaskCallback;
-import galitt.aetienne.hostcardemulationtester.service.authentication.User;
-import galitt.aetienne.hostcardemulationtester.service.request.GetResponseCallback;
+import org.aetienne.app.service.request.GetTask;
+import org.aetienne.app.service.request.RestTaskCallback;
+import org.aetienne.app.service.authentication.User;
+import org.aetienne.app.service.request.GetResponseCallback;
 
 /**
  * Created by Adrien on 22/09/2015.

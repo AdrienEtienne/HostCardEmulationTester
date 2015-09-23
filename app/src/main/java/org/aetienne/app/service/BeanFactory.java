@@ -1,10 +1,10 @@
-package galitt.aetienne.hostcardemulationtester.service;
+package org.aetienne.app.service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import galitt.aetienne.hostcardemulationtester.service.hce.Transaction;
-import galitt.aetienne.hostcardemulationtester.service.authentication.User;
+import org.aetienne.app.service.hce.Transaction;
+import org.aetienne.app.service.authentication.User;
 
 /**
  * Created by Adrien on 22/09/2015.

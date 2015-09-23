@@ -1,4 +1,4 @@
-package galitt.aetienne.hostcardemulationtester.activity;
+package org.aetienne.app.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,11 +10,11 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 
-import galitt.aetienne.hostcardemulationtester.service.ApiHCEApplication;
-import galitt.aetienne.hostcardemulationtester.service.authentication.User;
-import galitt.aetienne.hostcardemulationtester.service.request.GetResponseCallback;
+import org.aetienne.app.service.ApiHCEApplication;
+import org.aetienne.app.service.authentication.User;
+import org.aetienne.app.service.request.GetResponseCallback;
 
-import galitt.aetienne.hostcardemulationtester.R;
+import org.aetienne.app.R;
 
 public class SplashScreenActivity extends Activity {
 
@@ -51,7 +51,7 @@ public class SplashScreenActivity extends Activity {
 
                     @Override
                     public void onFailure(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), "Fail to connect user", Toast.LENGTH_SHORT);
+                        Toast.makeText(getApplicationContext(), "Fail to connect user Admin", Toast.LENGTH_LONG).show();
                         Intent mainIntent = new Intent(that, SettingsActivity.class);
                         that.startActivity(mainIntent);
                         that.finish();

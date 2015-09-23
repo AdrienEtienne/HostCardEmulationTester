@@ -1,4 +1,4 @@
-package galitt.aetienne.hostcardemulationtester.service;
+package org.aetienne.app.service;
 
 import junit.framework.Assert;
 
