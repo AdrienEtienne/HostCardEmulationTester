@@ -1,10 +1,10 @@
-package galitt.kn.service;
+package galitt.aetienne.hostcardemulationtester.service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import galitt.kn.service.hce.Transaction;
-import galitt.kn.service.authentication.User;
+import galitt.aetienne.hostcardemulationtester.service.hce.Transaction;
+import galitt.aetienne.hostcardemulationtester.service.authentication.User;
 
 /**
  * Created by Adrien on 22/09/2015.

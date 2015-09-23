@@ -1,13 +1,13 @@
-package galitt.kn.service.request;
+package galitt.aetienne.hostcardemulationtester.service.request;
 
 import android.os.AsyncTask;
 
 /**
  * Created by Adrien on 22/09/2015.
  */
-public class GetRequest extends AsyncTask<String, String, String> {
+public class GetTask extends AsyncTask<String, String, String> {
     private String mRestUrl;
-    private RestRequestCallback mCallback;
+    private RestTaskCallback mCallback;
 
     /**
      * Creates a new instance of GetTask with the specified URL and callback.
@@ -17,7 +17,7 @@ public class GetRequest extends AsyncTask<String, String, String> {
      *            completes.
      *
      */
-    public GetRequest(String restUrl, RestRequestCallback callback){
+    public GetTask(String restUrl, RestTaskCallback callback){
         this.mRestUrl = restUrl;
         this.mCallback = callback;
     }
@@ -32,7 +32,7 @@ public class GetRequest extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        mCallback.onRequestComplete(result);
+        mCallback.onTaskComplete(result);
         super.onPostExecute(result);
     }
 }

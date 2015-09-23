@@ -1,4 +1,4 @@
-package galitt.kn.service.hce;
+package galitt.aetienne.hostcardemulationtester.service.hce;
 
 import com.google.gson.annotations.SerializedName;
 

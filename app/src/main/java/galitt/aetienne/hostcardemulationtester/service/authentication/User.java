@@ -1,4 +1,4 @@
-package galitt.kn.service.authentication;
+package galitt.aetienne.hostcardemulationtester.service.authentication;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -14,7 +14,7 @@ public class User {
         mName = name;
     }
 
-    public String GetName(){
+    public String getName(){
         return mName;
     }
 }

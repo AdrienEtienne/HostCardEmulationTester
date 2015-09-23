@@ -1,4 +1,4 @@
-package galitt.kn.service;
+package galitt.aetienne.hostcardemulationtester.service;
 
 import com.google.gson.JsonSyntaxException;
 
@@ -6,10 +6,12 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import galitt.kn.service.hce.Transaction;
+import galitt.aetienne.hostcardemulationtester.service.hce.Transaction;
+
+import static org.junit.Assert.*;
 
 /**
- * Created by Adrien on 22/09/2015.
+ * Created by Adrien on 23/09/2015.
  */
 public class BeanFactoryTest {
     String jsonText = "{\"apdu\":\"monApdu\"}";
