@@ -5,6 +5,10 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
+import android.preference.Preference;
+import android.widget.Toast;
+
+import java.util.regex.Pattern;
 
 import org.aetienne.app.R;
 
@@ -20,6 +24,7 @@ import org.aetienne.app.R;
  * API Guide</a> for more information on developing a Settings UI.
  */
 public class SettingsActivity extends PreferenceActivity {
+
 
     /**
      * {@inheritDoc}
@@ -50,7 +55,36 @@ public class SettingsActivity extends PreferenceActivity {
         public void onCreate(final Bundle savedInstanceState)
         {
             super.onCreate(savedInstanceState);
+            final Context context = getActivity().getApplicationContext();
+
             addPreferencesFromResource(R.xml.pref_address);
+            findPreference("service_address").setOnPreferenceChangeListener(
+                new Preference.OnPreferenceChangeListener() {
+
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        boolean b = Pattern.matches("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}", (String) newValue);
+                        if (!b) {
+                            Toast.makeText(context, "Address is not IP pattern", Toast.LENGTH_LONG).show();
+                        }
+                        return b;
+                    }
+
+                });
+
+            findPreference("service_port").setOnPreferenceChangeListener(
+                new Preference.OnPreferenceChangeListener() {
+
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        boolean b = Pattern.matches("[0-9]{1,4}", (String) newValue);
+                        if(!b){
+                            Toast.makeText(context, "Port has to be an integer (0 - 80000)", Toast.LENGTH_LONG).show();
+                        }
+                        return b;
+                    }
+
+                });
         }
     }
 }

@@ -1,9 +1,12 @@
 <resources>
-    <string name="app_name">Host Card Emulation Tester</string>
+    <string name="app_name">HCE Tester</string>
 
     <string name="lbl_main_version">1.0.0</string>
     <string name="lbl_main_title">Host Card Emulation Tester</string>
     <string name="lbl_by">by</string>
     <string name="lbl_description_logo">Logo with name of company</string>
     <string name="lbl_galitt">Galitt</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 </resources>

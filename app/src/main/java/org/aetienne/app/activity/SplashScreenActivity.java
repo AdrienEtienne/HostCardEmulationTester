@@ -19,7 +19,7 @@ import org.aetienne.app.R;
 public class SplashScreenActivity extends Activity {
 
     /** Duration of wait **/
-    private final int SPLASH_DISPLAY_LENGTH = 100;
+    private final int SPLASH_DISPLAY_LENGTH = 1500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,24 +39,9 @@ public class SplashScreenActivity extends Activity {
             @Override
             public void run() {
 
-                ApiHCEApplication api = ApiHCEApplication.getInstance();
-                api.setAddressAndPort("192.168.1.29", 9000);
-
-                api.getUser("Admin", new GetResponseCallback<User>() {
-
-                    @Override
-                    public void onDataReceived(User obj) {
-                        Toast.makeText(getApplicationContext(), "User " + obj.getName() + " found", Toast.LENGTH_LONG).show();
-                    }
-
-                    @Override
-                    public void onFailure(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), "Fail to connect user Admin", Toast.LENGTH_LONG).show();
-                        Intent mainIntent = new Intent(that, SettingsActivity.class);
-                        that.startActivity(mainIntent);
-                        that.finish();
-                    }
-                });
+                Intent mainIntent = new Intent(that, MainActivity.class);
+                that.startActivity(mainIntent);
+                that.finish();
             }
         }, SPLASH_DISPLAY_LENGTH);
     }
