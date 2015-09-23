@@ -32,6 +32,7 @@ public class HttpClientHceServiceSingletonTest {
         HttpClientHceServiceSingleton client = HttpClientHceServiceSingleton.getInstance();
         client.setAddressAndPort("127.0.0.1", 8080);
         Assert.assertEquals(8080, client.getPort());
+
     }
 
     @Test
@@ -43,7 +44,18 @@ public class HttpClientHceServiceSingletonTest {
     }
 
     @Test
-    public void testGetUrl() throws Exception {
+    public void testGetUrl_authentication() throws Exception {
+        HttpClientHceServiceSingleton client = HttpClientHceServiceSingleton.getInstance();
+        client.setAddressAndPort("localhost", 9000);
+        Assert.assertEquals("http://localhost:9000/api/users/argument",
+                client.getUrl(HttpClientHceServiceSingleton.Apis.AUTHENTICATION, "/argument"));
+    }
 
+    @Test
+    public void testGetUrl_hce() throws Exception {
+        HttpClientHceServiceSingleton client = HttpClientHceServiceSingleton.getInstance();
+        client.setAddressAndPort("localhost", 9000);
+        Assert.assertEquals("http://localhost:9000/api/hce/argument",
+                client.getUrl(HttpClientHceServiceSingleton.Apis.HCE, "/argument"));
     }
 }

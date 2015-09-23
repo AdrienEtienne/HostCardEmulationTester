@@ -19,7 +19,6 @@ import galitt.kn.service.request.GetResponseCallback;
 public class HttpClientHceServiceSingleton extends Application{
     private static final String TAG = HttpClientHceServiceSingleton.class.getSimpleName();
     private final String HTTP_PRE_ADDRESS = "http://";
-    private final String API_USER = "/api/users";
     private String mAddress = "127.0.0.1";
     private int mPort = 8080;
 
@@ -75,7 +74,7 @@ public class HttpClientHceServiceSingleton extends Application{
     }
 
     protected String getUrl(Apis api, String arguments) {
-        return getAddress() + ":" + mPort + api.getValue() + "/" + arguments;
+        return getAddress() + ":" + mPort + api.getValue() + arguments;
     }
 
     @Override
@@ -99,9 +98,10 @@ public class HttpClientHceServiceSingleton extends Application{
     /**
      * Request a User Profile from the REST server.
      * @param userName The user name for which the profile is to be requested.
-     * @param cbSuccess Callback to execute when the profile is available.
+     * @param cbSuccess Callback to execute when the user is available.
+     * @param cbError Callback to execute when error thrown.
      */
-    public void getUserProfile(String userName, final GetResponseCallback cbSuccess, final GetResponseCallback cbError){
+    public void getUser(String userName, final GetResponseCallback cbSuccess, final GetResponseCallback cbError){
         String url = getUrl(Apis.AUTHENTICATION, userName);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
