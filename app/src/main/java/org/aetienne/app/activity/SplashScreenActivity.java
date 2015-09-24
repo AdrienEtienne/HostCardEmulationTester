@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 
+import org.aetienne.app.LocalData;
 import org.aetienne.app.service.ApiHCEApplication;
 import org.aetienne.app.service.authentication.User;
 import org.aetienne.app.service.request.GetResponseCallback;
@@ -39,8 +40,17 @@ public class SplashScreenActivity extends Activity {
             @Override
             public void run() {
 
-                Intent mainIntent = new Intent(that, MainActivity.class);
-                that.startActivity(mainIntent);
+                User user = LocalData.getUser(that.getApplicationContext());
+                Intent intent;
+
+                if(user == null){
+                    intent = new Intent(that, LoginActivity.class);
+                }
+                else{
+                    intent = new Intent(that, MainActivity.class);
+                }
+
+                that.startActivity(intent);
                 that.finish();
             }
         }, SPLASH_DISPLAY_LENGTH);

@@ -9,9 +9,11 @@ public class User {
 
     @SerializedName("name")
     private String mName;
+    private int mCode;
 
-    public User(String name){
+    public User(String name, int code){
         mName = name;
+        mCode = code;
     }
 
     public String getName(){

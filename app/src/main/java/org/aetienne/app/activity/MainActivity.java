@@ -115,7 +115,8 @@ public class MainActivity extends AppCompatActivity {
         mApi.getWorkspaces(new GetResponseCallback<List<Workspace>>() {
             @Override
             public void onDataReceived(List<Workspace> lstWorkspaces) {
-                Toast.makeText(getApplicationContext(), "Get workspaces", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Get workspaces : " + lstWorkspaces.size(), Toast.LENGTH_SHORT).show();
+                getUser();
             }
 
             @Override
@@ -126,11 +127,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void getUser(){
-        mApi.getUser("Admin", new GetResponseCallback<User>() {
+        if(mUser == null){
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            return;
+        }
+
+        mApi.getUser(mUser.getName(), new GetResponseCallback<User>() {
 
             @Override
             public void onDataReceived(User obj) {
                 Toast.makeText(getApplicationContext(), "User " + obj.getName() + " found", Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
