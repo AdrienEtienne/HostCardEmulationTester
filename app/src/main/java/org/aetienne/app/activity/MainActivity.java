@@ -8,9 +8,12 @@ import android.view.View;
 import android.widget.Toast;
 import android.content.Intent;
 import android.widget.Button;
+import android.os.Handler;
+import java.util.ArrayList;
 
 import org.aetienne.app.LocalData;
 import org.aetienne.app.R;
+import org.aetienne.app.animation.DropDownAnimation;
 import org.aetienne.app.service.ApiHCEApplication;
 import org.aetienne.app.service.entity.User;
 import org.aetienne.app.service.request.GetResponseCallback;
@@ -25,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     String tag = "main_activity";
 
     private Button mButton;
+    private View bandConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +42,13 @@ public class MainActivity extends AppCompatActivity {
                 getInformation();
             }
         });
+
+        bandConnection = findViewById(R.id.layoutBandConnection);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
         getInformation();
     }
 
@@ -84,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void getInformation(){
+        hideConnectionBand();
         setConfiguration();
         getWorkspaces();
     }
@@ -92,9 +98,8 @@ public class MainActivity extends AppCompatActivity {
         switch(error){
             case NO_CONNECTION:
             {
+                showConnectionBand();
                 Toast.makeText(getApplicationContext(), "Fail to connect to server. " + msg, Toast.LENGTH_SHORT).show();
-                Intent settingsIntent = new Intent(this, SettingsActivity.class);
-                this.startActivity(settingsIntent);
                 break;
             }
             default:
@@ -137,5 +142,18 @@ public class MainActivity extends AppCompatActivity {
                 catchRequestError(error, "Get user");
             }
         });
+    }
+
+    public void hideConnectionBand(){
+        DropDownAnimation a = new DropDownAnimation(bandConnection, bandConnection.getHeight(), false);
+        a.setDuration(600);
+        bandConnection.startAnimation(a);
+    }
+
+    public void showConnectionBand(){
+        DropDownAnimation a = new DropDownAnimation(bandConnection, 180, true);
+        a.setDuration(600);
+        bandConnection.setVisibility(bandConnection.INVISIBLE);
+        bandConnection.startAnimation(a);
     }
 }
