@@ -1,24 +1,21 @@
-package org.aetienne.app.service;
+package org.aetienne.app.service.entity;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.aetienne.app.service.hce.Transaction;
-import org.aetienne.app.service.authentication.User;
-
 /**
  * Created by Adrien on 22/09/2015.
  */
-public class BeanFactory {
-    public static Transaction GetTransaction(String json){
+public class EntityFactory {
+
+    public static Transaction getTransaction(String json){
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
         Transaction t = gson.fromJson(json, Transaction.class);
-
         return t;
     }
 
-    public static User GetUser(String json){
+    public static User getUser(String json){
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
         User t = gson.fromJson(json, User.class);
@@ -26,9 +23,16 @@ public class BeanFactory {
         return t;
     }
 
-    public static String GetJsonString(Object obj){
+    public static Workspace getWorkspace(String json){
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+        Workspace t = gson.fromJson(json, Workspace.class);
+
+        return t;
+    }
+
+    public static String fromJson(IEntity json){
         Gson gson = new Gson();
-        String json = gson.toJson(obj);
-        return json;
+        return gson.toJson(json);
     }
 }

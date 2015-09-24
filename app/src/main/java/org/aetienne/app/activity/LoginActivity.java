@@ -7,6 +7,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
@@ -25,13 +26,20 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.LinearLayout;
+
+import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.aetienne.app.LocalData;
 import org.aetienne.app.R;
-import org.aetienne.app.service.authentication.User;
+import org.aetienne.app.service.ApiHCEApplication;
+import org.aetienne.app.service.entity.User;
+import org.aetienne.app.service.request.GetResponseCallback;
 
 /**
  * A login screen that offers login via email/password and via Google+ sign in.
@@ -71,24 +79,16 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         // Set up the login form.
         mUsernameView = (AutoCompleteTextView) findViewById(R.id.username);
-        populateAutoComplete();
-
         mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
-            }
-        });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.username_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        Button mSignInButton = (Button) findViewById(R.id.username_sign_in_button);
+        mSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                LinearLayout mainLayout = (LinearLayout) findViewById(R.id.login_layout);
+                InputMethodManager imm = (InputMethodManager) getSystemService(getApplicationContext().INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mainLayout.getWindowToken(), 0);
+
                 attemptLogin();
             }
         });
@@ -96,13 +96,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
         mUsernameLoginFormView = findViewById(R.id.username_login_form);
-        mSignOutButtons = findViewById(R.id.plus_sign_out_buttons);
     }
-
-    private void populateAutoComplete() {
-        getLoaderManager().initLoader(0, null, this);
-    }
-
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -151,8 +145,34 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(username, Integer.parseInt(password));
-            mAuthTask.execute((Void) null);
+
+            final LoginActivity that = this;
+            ApiHCEApplication.getInstance().AuthenticateUser(new User(username, password),new GetResponseCallback<User>() {
+                @Override
+                public void onDataReceived(User user) {
+                    showProgress(false);
+                    Toast.makeText(getApplicationContext(), "User found" , Toast.LENGTH_SHORT).show();
+                    LocalData.setUser(getApplicationContext(), user);
+                    Intent intent = new Intent(that, MainActivity.class);
+                    that.startActivity(intent);
+                    that.finish();
+                }
+
+                @Override
+                public void onFailure(REQUEST_ERROR error) {
+                    showProgress(false);
+                    if(error == REQUEST_ERROR.NO_CONNECTION){
+                        Toast.makeText(getApplicationContext(), "Fail to connect to server.", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(that, SettingsActivity.class);
+                        that.startActivity(intent);
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(), "User not found" , Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+            //mAuthTask = new UserLoginTask(username, password);
+            //mAuthTask.execute((Void) null);
         }
     }
 
@@ -260,9 +280,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mUsername;
-        private final int mPassword;
+        private final String mPassword;
 
-        UserLoginTask(String username, int password) {
+        UserLoginTask(String username, String password) {
             mUsername = username;
             mPassword = password;
         }

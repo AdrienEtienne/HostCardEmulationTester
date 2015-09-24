@@ -6,14 +6,10 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.volley.VolleyError;
 
 import org.aetienne.app.LocalData;
 import org.aetienne.app.service.ApiHCEApplication;
-import org.aetienne.app.service.authentication.User;
-import org.aetienne.app.service.request.GetResponseCallback;
+import org.aetienne.app.service.entity.User;
 
 import org.aetienne.app.R;
 
@@ -34,6 +30,10 @@ public class SplashScreenActivity extends Activity {
 
         final Activity that = this;
 
+        String address = LocalData.getAddress(this);
+        int port = LocalData.getPort(this);
+        ApiHCEApplication.getInstance().setAddressAndPort(address, port);
+
         /* New Handler to start the Menu-Activity
          * and close this Splash-Screen after some seconds.*/
         new Handler().postDelayed(new Runnable() {
@@ -43,10 +43,9 @@ public class SplashScreenActivity extends Activity {
                 User user = LocalData.getUser(that.getApplicationContext());
                 Intent intent;
 
-                if(user == null){
+                if (user == null) {
                     intent = new Intent(that, LoginActivity.class);
-                }
-                else{
+                } else {
                     intent = new Intent(that, MainActivity.class);
                 }
 

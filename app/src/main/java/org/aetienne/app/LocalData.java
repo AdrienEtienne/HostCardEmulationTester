@@ -4,7 +4,7 @@ import android.content.SharedPreferences;
 import android.content.Context;
 import android.preference.PreferenceManager;
 
-import org.aetienne.app.service.authentication.User;
+import org.aetienne.app.service.entity.User;
 
 /**
  * Created by Adrien on 23/09/2015.
@@ -14,16 +14,18 @@ public class LocalData {
     private static final String FILE_NAME = "hcePrefs";
 
     private static final String USER_NAME = "user_name";
+    private static final String USER_CODE = "user_code";
 
     public static User getUser(Context context){
         SharedPreferences settings = context.getSharedPreferences(FILE_NAME, 0);
-        String name = settings.getString(USER_NAME, null);
+        String username = settings.getString(USER_NAME, null);
+        String code = settings.getString(USER_CODE, null);
 
         User u = null;
 
-        if(name != null)
+        if(username != null)
         {
-            u = new User(name);
+            u = new User(username, code);
         }
 
         return u;

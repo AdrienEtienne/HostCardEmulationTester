@@ -1,11 +1,11 @@
-package org.aetienne.app.service.hce;
+package org.aetienne.app.service.entity;
 
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Adrien on 24/09/2015.
  */
-public class Workspace {
+public class Workspace implements IEntity {
     @SerializedName("name")
     private String mName;
 

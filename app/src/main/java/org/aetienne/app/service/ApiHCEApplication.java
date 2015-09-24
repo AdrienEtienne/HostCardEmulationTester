@@ -8,17 +8,19 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 
-import org.aetienne.app.service.hce.Workspace;
+import org.aetienne.app.service.entity.EntityFactory;
+import org.aetienne.app.service.entity.Workspace;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import com.google.gson.Gson;
+import java.util.Map;
+import java.util.HashMap;
 
 import com.android.volley.toolbox.Volley;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import org.aetienne.app.service.authentication.User;
+import org.aetienne.app.service.entity.User;
 import org.aetienne.app.service.request.GetResponseCallback;
 
 import java.util.ArrayList;
@@ -36,10 +38,8 @@ public class ApiHCEApplication extends Application{
     private RequestQueue mRequestQueue;
     private static ApiHCEApplication mInstance = new ApiHCEApplication();
 
-    private Gson mGson = new Gson();
-
     protected enum Apis{
-        AUTHENTICATION("/api/users/user"),
+        AUTHENTICATION("/api/users"),
         HCE("/api/hce");
 
         private final String value;
@@ -84,6 +84,14 @@ public class ApiHCEApplication extends Application{
         return this.mPort;
     }
 
+    public void setAddress(String address){
+        mAddress = address;
+    }
+
+    public void setPort(int port){
+        mPort = port;
+    }
+
     public void setAddressAndPort(String address, int port){
         mAddress = address;
         mPort = port;
@@ -107,29 +115,49 @@ public class ApiHCEApplication extends Application{
 
     /**
      * Request a User Profile from the REST server.
-     * @param userName The user name for which the profile is to be requested.
+     * @param user The user name for which the profile is to be requested.
      * @param callback Callback to execute when the user is available.
      */
-    public void getUser(String userName, final GetResponseCallback<User> callback){
-        String url = getUrl(Apis.AUTHENTICATION, "/" + userName);
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-            new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    // Display the first 500 characters of the response string.
-                    Gson gson = new Gson();
-                    User obj = gson.fromJson(response.toString(), User.class);
-                    callback.onDataReceived(obj);
-                }
-            },
+    public void AuthenticateUser(User user, final GetResponseCallback<User> callback){
+        String url = getUrl(Apis.HCE, "/users/" + user.getName());
 
-            new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    callback.onFailure(error);
-                }
+        final User u = user;
+        JSONObject jsonBody;
+        try {
+            jsonBody = new JSONObject(EntityFactory.fromJson(user));
+        } catch (JSONException e) {
+            callback.onFailure(GetResponseCallback.REQUEST_ERROR.REQUEST_BAD_JSON_FORMAT);
+            return;
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonBody,
+                new Response.Listener<JSONObject>()
+                {
+                    @Override
+                    public void onResponse(JSONObject response)
+                    {
+                        u.setAuthenticated(true);
+                        callback.onDataReceived(u);
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error)
+                    {
+                        callback.onFailure(GetResponseCallback.catchVolleyError(error));
+                    }
+                })
+        {
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("name", u.getName());
+                params.put("code", u.getCode());
+                return params;
             }
-        );
+        };
 
         getInstance().getRequestQueue().add(request);
     }
@@ -149,7 +177,7 @@ public class ApiHCEApplication extends Application{
                         for (int i = 0; i < response.length(); i++) {
                             try {
                                 JSONObject jsonObject = response.getJSONObject(i);
-                                Workspace workspace = mGson.fromJson(jsonObject.toString(), Workspace.class);
+                                Workspace workspace = EntityFactory.getWorkspace(jsonObject.toString());
                                 lstWorkspaces.add(workspace);
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -163,7 +191,7 @@ public class ApiHCEApplication extends Application{
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        callback.onFailure(error);
+                        callback.onFailure(GetResponseCallback.catchVolleyError(error));
                     }
                 }
         );

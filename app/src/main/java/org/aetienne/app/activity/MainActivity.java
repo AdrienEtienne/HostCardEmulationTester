@@ -9,21 +9,18 @@ import android.widget.Toast;
 import android.content.Intent;
 import android.widget.Button;
 
-import com.android.volley.VolleyError;
-
 import org.aetienne.app.LocalData;
 import org.aetienne.app.R;
 import org.aetienne.app.service.ApiHCEApplication;
-import org.aetienne.app.service.authentication.User;
+import org.aetienne.app.service.entity.User;
 import org.aetienne.app.service.request.GetResponseCallback;
-import org.aetienne.app.service.hce.Workspace;
+import org.aetienne.app.service.entity.Workspace;
 
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     User mUser;
-    ApiHCEApplication mApi;
 
     String tag = "main_activity";
 
@@ -33,8 +30,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mApi = ApiHCEApplication.getInstance();
 
         mButton = (Button) findViewById(R.id.button);
         mButton.setOnClickListener(new View.OnClickListener() {
@@ -56,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
 
-        mApi.cancelPendingRequests(tag);
+        ApiHCEApplication.getInstance().cancelPendingRequests(tag);
     }
 
     @Override
@@ -86,12 +81,6 @@ public class MainActivity extends AppCompatActivity {
     void setConfiguration(){
         User user = LocalData.getUser(this);
         mUser = user;
-
-        if(mApi != null){
-            String address = LocalData.getAddress(this);
-            int port = LocalData.getPort(this);
-            mApi.setAddressAndPort(address, port);
-        }
     }
 
     void getInformation(){
@@ -99,20 +88,22 @@ public class MainActivity extends AppCompatActivity {
         getWorkspaces();
     }
 
-    void catchVolleyError(VolleyError error, String msg){
-        if (error.getClass().getName().equals("com.android.volley.NoConnectionError")) {
-            Toast.makeText(getApplicationContext(), "Fail to connect to server. " + msg, Toast.LENGTH_SHORT).show();
-            Intent settingsIntent = new Intent(this, SettingsActivity.class);
-            this.startActivity(settingsIntent);
-        } else if (error.getClass().getName().equals("com.android.volley.ErrorRequest")) {
-            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+    void catchRequestError(GetResponseCallback.REQUEST_ERROR error, String msg){
+        switch(error){
+            case NO_CONNECTION:
+            {
+                Toast.makeText(getApplicationContext(), "Fail to connect to server. " + msg, Toast.LENGTH_SHORT).show();
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                this.startActivity(settingsIntent);
+                break;
+            }
+            default:
+                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
         }
     }
 
     void getWorkspaces(){
-        mApi.getWorkspaces(new GetResponseCallback<List<Workspace>>() {
+        ApiHCEApplication.getInstance().getWorkspaces(new GetResponseCallback<List<Workspace>>() {
             @Override
             public void onDataReceived(List<Workspace> lstWorkspaces) {
                 Toast.makeText(getApplicationContext(), "Get workspaces : " + lstWorkspaces.size(), Toast.LENGTH_SHORT).show();
@@ -120,8 +111,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(VolleyError error) {
-                catchVolleyError(error, "Get workspaces");
+            public void onFailure(REQUEST_ERROR error) {
+                catchRequestError(error, "Get workspaces");
             }
         });
     }
@@ -133,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        mApi.getUser(mUser.getName(), new GetResponseCallback<User>() {
+        ApiHCEApplication.getInstance().AuthenticateUser(mUser, new GetResponseCallback<User>() {
 
             @Override
             public void onDataReceived(User obj) {
@@ -142,8 +133,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(VolleyError error) {
-                catchVolleyError(error, "Get user");
+            public void onFailure(REQUEST_ERROR error) {
+                catchRequestError(error, "Get user");
             }
         });
     }

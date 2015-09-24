@@ -11,6 +11,7 @@ import android.widget.Toast;
 import java.util.regex.Pattern;
 
 import org.aetienne.app.R;
+import org.aetienne.app.service.ApiHCEApplication;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -59,18 +60,20 @@ public class SettingsActivity extends PreferenceActivity {
 
             addPreferencesFromResource(R.xml.pref_address);
             findPreference("service_address").setOnPreferenceChangeListener(
-                new Preference.OnPreferenceChangeListener() {
+                    new Preference.OnPreferenceChangeListener() {
 
-                    @Override
-                    public boolean onPreferenceChange(Preference preference, Object newValue) {
-                        boolean b = Pattern.matches("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}", (String) newValue);
-                        if (!b) {
-                            Toast.makeText(context, "Address is not IP pattern", Toast.LENGTH_SHORT).show();
+                        @Override
+                        public boolean onPreferenceChange(Preference preference, Object newValue) {
+                            boolean b = Pattern.matches("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}", (String) newValue);
+                            if (!b) {
+                                Toast.makeText(context, "Address is not IP pattern", Toast.LENGTH_SHORT).show();
+                            } else {
+                                ApiHCEApplication.getInstance().setAddress((String)newValue);
+                            }
+                            return b;
                         }
-                        return b;
-                    }
 
-                });
+                    });
 
             findPreference("service_port").setOnPreferenceChangeListener(
                 new Preference.OnPreferenceChangeListener() {
@@ -80,6 +83,9 @@ public class SettingsActivity extends PreferenceActivity {
                         boolean b = Pattern.matches("[0-9]{1,4}", (String) newValue);
                         if(!b){
                             Toast.makeText(context, "Port has to be an integer (0 - 80000)", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            ApiHCEApplication.getInstance().setPort(Integer.parseInt((String)newValue));
                         }
                         return b;
                     }
