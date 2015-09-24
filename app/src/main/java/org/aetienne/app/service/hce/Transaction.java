@@ -13,7 +13,7 @@ public class Transaction {
     public Transaction(String apdu){
         mApdu = apdu;
     }
-    public String GetApdu(){
+    public String getApdu(){
         return mApdu;
     }
 }

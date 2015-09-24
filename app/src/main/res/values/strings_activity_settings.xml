@@ -7,7 +7,7 @@
     <string name="pref_title_address">Server address</string>
     <string name="pref_description_address">Address of the server
     </string>
-    <string name="pref_default_address">127.0.0.1</string>
+    <string name="pref_default_address">192.168.1.29</string>
 
     <string name="pref_title_port">Server port</string>
     <string name="pref_description_port">Port of the server

@@ -5,20 +5,24 @@ import android.text.TextUtils;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.aetienne.app.service.hce.Workspace;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
-import com.android.volley.Request.Method;
 import com.google.gson.Gson;
 
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import org.aetienne.app.service.request.GetTask;
-import org.aetienne.app.service.request.RestTaskCallback;
 import org.aetienne.app.service.authentication.User;
 import org.aetienne.app.service.request.GetResponseCallback;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Adrien on 22/09/2015.
@@ -31,6 +35,8 @@ public class ApiHCEApplication extends Application{
 
     private RequestQueue mRequestQueue;
     private static ApiHCEApplication mInstance = new ApiHCEApplication();
+
+    private Gson mGson = new Gson();
 
     protected enum Apis{
         AUTHENTICATION("/api/users/user"),
@@ -128,15 +134,41 @@ public class ApiHCEApplication extends Application{
         getInstance().getRequestQueue().add(request);
     }
 
-    public void getUser2(String userName, final GetResponseCallback callback){
-        String url = getUrl(Apis.AUTHENTICATION, "/" + userName);
-        new GetTask(url, new RestTaskCallback (){
-            @Override
-            public void onTaskComplete(String response){
-                User u = new User(response);
-                callback.onDataReceived(u);
-            }
-        }).execute();
+    /**
+     * Request a User Profile from the REST server.
+     * @param callback Callback to execute when the user is available.
+     */
+    public void getWorkspaces(final GetResponseCallback<List<Workspace>> callback){
+        String url = getUrl(Apis.HCE, "/workspaces");
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        List<Workspace> lstWorkspaces = new ArrayList<Workspace>();
+
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                JSONObject jsonObject = response.getJSONObject(i);
+                                Workspace workspace = mGson.fromJson(jsonObject.toString(), Workspace.class);
+                                lstWorkspaces.add(workspace);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        callback.onDataReceived(lstWorkspaces);
+                    }
+                },
+
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        callback.onFailure(error);
+                    }
+                }
+        );
+
+        getInstance().getRequestQueue().add(request);
     }
 
 }

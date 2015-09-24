@@ -8,8 +8,6 @@ import org.junit.Test;
 
 import org.aetienne.app.service.hce.Transaction;
 
-import static org.junit.Assert.*;
-
 /**
  * Created by Adrien on 23/09/2015.
  */
@@ -19,7 +17,7 @@ public class BeanFactoryTest {
     @Test
     public void testGetTransaction() throws Exception {
         Transaction t = BeanFactory.GetTransaction(jsonText);
-        Assert.assertEquals("monApdu", t.GetApdu());
+        Assert.assertEquals("monApdu", t.getApdu());
     }
 
     @Test(expected = JsonSyntaxException.class)

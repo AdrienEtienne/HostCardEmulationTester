@@ -16,11 +16,16 @@ import org.aetienne.app.R;
 import org.aetienne.app.service.ApiHCEApplication;
 import org.aetienne.app.service.authentication.User;
 import org.aetienne.app.service.request.GetResponseCallback;
+import org.aetienne.app.service.hce.Workspace;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     User mUser;
     ApiHCEApplication mApi;
+
+    String tag = "main_activity";
 
     private Button mButton;
 
@@ -31,8 +36,6 @@ public class MainActivity extends AppCompatActivity {
 
         mApi = ApiHCEApplication.getInstance();
 
-        getInformation();
-
         mButton = (Button) findViewById(R.id.button);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,6 +43,20 @@ public class MainActivity extends AppCompatActivity {
                 getInformation();
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        getInformation();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        mApi.cancelPendingRequests(tag);
     }
 
     @Override
@@ -79,18 +96,46 @@ public class MainActivity extends AppCompatActivity {
 
     void getInformation(){
         setConfiguration();
+        getWorkspaces();
+    }
 
-        mApi.getUser("Admin", new GetResponseCallback<User>() {
+    void catchVolleyError(VolleyError error, String msg){
+        if (error.getClass().getName().equals("com.android.volley.NoConnectionError")) {
+            Toast.makeText(getApplicationContext(), "Fail to connect to server. " + msg, Toast.LENGTH_SHORT).show();
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            this.startActivity(settingsIntent);
+        } else if (error.getClass().getName().equals("com.android.volley.ErrorRequest")) {
+            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+        }
+    }
 
+    void getWorkspaces(){
+        mApi.getWorkspaces(new GetResponseCallback<List<Workspace>>() {
             @Override
-            public void onDataReceived(User obj) {
-                Toast.makeText(getApplicationContext(), "User " + obj.getName() + " found", Toast.LENGTH_LONG).show();
+            public void onDataReceived(List<Workspace> lstWorkspaces) {
+                Toast.makeText(getApplicationContext(), "Get workspaces", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(VolleyError error) {
-                Toast.makeText(getApplicationContext(), "Fail to connect user Admin", Toast.LENGTH_LONG).show();
+                catchVolleyError(error, "Get workspaces");
+            }
+        });
+    }
 
+    void getUser(){
+        mApi.getUser("Admin", new GetResponseCallback<User>() {
+
+            @Override
+            public void onDataReceived(User obj) {
+                Toast.makeText(getApplicationContext(), "User " + obj.getName() + " found", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(VolleyError error) {
+                catchVolleyError(error, "Get user");
             }
         });
     }

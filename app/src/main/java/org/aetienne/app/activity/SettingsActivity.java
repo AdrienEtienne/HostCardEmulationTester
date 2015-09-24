@@ -65,7 +65,7 @@ public class SettingsActivity extends PreferenceActivity {
                     public boolean onPreferenceChange(Preference preference, Object newValue) {
                         boolean b = Pattern.matches("[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}", (String) newValue);
                         if (!b) {
-                            Toast.makeText(context, "Address is not IP pattern", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, "Address is not IP pattern", Toast.LENGTH_SHORT).show();
                         }
                         return b;
                     }
@@ -79,7 +79,7 @@ public class SettingsActivity extends PreferenceActivity {
                     public boolean onPreferenceChange(Preference preference, Object newValue) {
                         boolean b = Pattern.matches("[0-9]{1,4}", (String) newValue);
                         if(!b){
-                            Toast.makeText(context, "Port has to be an integer (0 - 80000)", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, "Port has to be an integer (0 - 80000)", Toast.LENGTH_SHORT).show();
                         }
                         return b;
                     }

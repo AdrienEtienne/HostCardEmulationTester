@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/app_name"
+            android:text="@string/lbl_main_title"
             android:id="@+id/textViewAppName"
             style="@style/Base.TextAppearance.AppCompat"
             android:textColor="#FF3C3C3C"
@@ -83,16 +83,6 @@
             </TableRow>
 
         </TableLayout>
-
-        <RelativeLayout
-            style="@style/GenericProgressBackground"
-            android:id="@+id/loadingPanel"
-            android:layout_gravity="center_horizontal|bottom"
-            android:layout_height="match_parent">
-            <ProgressBar
-                style="@style/GenericProgressIndicator"
-                android:layout_margin="10dp" />
-        </RelativeLayout>
 
     </LinearLayout>
 
