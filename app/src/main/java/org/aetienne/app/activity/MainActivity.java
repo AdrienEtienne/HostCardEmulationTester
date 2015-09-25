@@ -1,14 +1,17 @@
 package org.aetienne.app.activity;
 
+import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
-import android.content.Intent;
 import android.widget.Button;
-import android.app.Fragment;
+import android.widget.Toast;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.aetienne.app.LocalData;
 import org.aetienne.app.R;
@@ -17,11 +20,10 @@ import org.aetienne.app.animation.DropDownAnimation;
 import org.aetienne.app.modelAdapter.WorkspaceItemSimpleAdapter;
 import org.aetienne.app.service.ApiHCEApplication;
 import org.aetienne.app.service.entity.User;
-import org.aetienne.app.service.request.GetResponseCallback;
 import org.aetienne.app.service.entity.Workspace;
+import org.aetienne.app.service.request.GetResponseCallback;
 import org.aetienne.app.viewmodel.ListItemSimpleAbstract;
 
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener{
 
@@ -53,12 +55,33 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
             mFrag = ListItemSimpleFragment.newInstance("Workspace");
             getFragmentManager().beginTransaction().add(R.id.container, (Fragment) mFrag).commit();
         }
+
+        List<Workspace> lst = new ArrayList<Workspace>();
+        lst.add(new Workspace("first", true));
+        setWorkspaces(lst);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mFrag.addItem(new WorkspaceItemSimpleAdapter("delay onCreate","delay onCreate","delay onCreate"));
+            }
+        }, 1000);
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        getInformation();
+    protected void onResume() {
+        super.onResume();
+        //getInformation();
+        List<Workspace> lst = new ArrayList<Workspace>();
+        lst.add(new Workspace("onstart", true));
+        setWorkspaces(lst);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mFrag.addItem(new WorkspaceItemSimpleAdapter("delay onResume", "delay onResume", "delay onResume"));
+            }
+        }, 1000);
     }
 
     @Override
@@ -97,6 +120,15 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         mUser = user;
     }
 
+    void setWorkspaces(List<Workspace> workspaces){
+        for(Workspace workspace: workspaces){
+            mFrag.addItem(new WorkspaceItemSimpleAdapter(
+                    workspace.getId(),
+                    workspace.getName(),
+                    ""+workspace.getPort()));
+        }
+    }
+
     void getInformation(){
         hideConnectionBand();
         setConfiguration();
@@ -120,12 +152,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         ApiHCEApplication.getInstance().getWorkspaces(new GetResponseCallback<List<Workspace>>() {
             @Override
             public void onDataReceived(List<Workspace> lstWorkspaces) {
-                for(Workspace workspace: lstWorkspaces){
-                    mFrag.addItem(new WorkspaceItemSimpleAdapter(
-                            workspace.getId(),
-                            workspace.getName(),
-                            ""+workspace.getPort()));
-                }
+                Toast.makeText(getApplicationContext(), "Get workspaces : " + lstWorkspaces.size(), Toast.LENGTH_SHORT).show();
+                //setWorkspaces(lstWorkspaces);
                 //getUser();
             }
 

@@ -2,6 +2,7 @@ package org.aetienne.app.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 import android.app.Fragment;
 
 import org.aetienne.app.R;
+import org.aetienne.app.modelAdapter.WorkspaceItemSimpleAdapter;
 import org.aetienne.app.viewmodel.ListItemSimpleAbstract;
 import org.aetienne.app.viewmodel.ListSimpleAdapter;
 
@@ -84,7 +86,7 @@ public class ListItemSimpleFragment<T extends ListItemSimpleAbstract> extends Fr
 
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
-        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
+        mListView.setAdapter(mAdapter);
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
