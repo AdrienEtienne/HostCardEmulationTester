@@ -2,21 +2,19 @@ package org.aetienne.app.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.app.Fragment;
 
 import org.aetienne.app.R;
-import org.aetienne.app.activity.dummy.DummyContent;
-import org.aetienne.app.viewmodel.ExampleListAdapter;
-import org.aetienne.app.viewmodel.ExampleListItem;
+import org.aetienne.app.viewmodel.ListItemSimpleAbstract;
+import org.aetienne.app.viewmodel.ListSimpleAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,18 +28,13 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class ExampleItemFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class ListItemSimpleFragment<T extends ListItemSimpleAbstract> extends Fragment implements AbsListView.OnItemClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_TYPE = "type";
 
-    private List exampleListItemList; // at the top of your fragment list
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private List<T> mItemList; // at the top of your fragment list
 
     private OnFragmentInteractionListener mListener;
 
@@ -56,13 +49,12 @@ public class ExampleItemFragment extends Fragment implements AbsListView.OnItemC
      */
     private ListAdapter mAdapter;
 
-    // TODO: Rename and change types of parameters
-    public static ExampleItemFragment newInstance(String param1, String param2) {
-        ExampleItemFragment fragment = new ExampleItemFragment();
+    public static ListItemSimpleFragment newInstance(String type) {
+        ListItemSimpleFragment fragment = new ListItemSimpleFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_TYPE, type);
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -70,7 +62,8 @@ public class ExampleItemFragment extends Fragment implements AbsListView.OnItemC
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ExampleItemFragment() {
+    public ListItemSimpleFragment() {
+        mItemList = new ArrayList();
     }
 
     @Override
@@ -78,21 +71,10 @@ public class ExampleItemFragment extends Fragment implements AbsListView.OnItemC
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            String mParam1 = getArguments().getString(ARG_TYPE);
         }
 
-        exampleListItemList = new ArrayList();
-        exampleListItemList.add(new ExampleListItem("Example 1"));
-        exampleListItemList.add(new ExampleListItem("Example 2"));
-        exampleListItemList.add(new ExampleListItem("Example 3"));
-        exampleListItemList.add(new ExampleListItem("Example 4"));
-        exampleListItemList.add(new ExampleListItem("Example 5"));
-        exampleListItemList.add(new ExampleListItem("Example 6"));
-        exampleListItemList.add(new ExampleListItem("Example 7"));
-        exampleListItemList.add(new ExampleListItem("Example 8"));
-        exampleListItemList.add(new ExampleListItem("Example 9"));
-        mAdapter = new ExampleListAdapter(getActivity(), exampleListItemList);
+        mAdapter = new ListSimpleAdapter(getActivity(), mItemList);
     }
 
     @Override
@@ -129,9 +111,10 @@ public class ExampleItemFragment extends Fragment implements AbsListView.OnItemC
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        ExampleListItem item = (ExampleListItem) this.exampleListItemList.get(position);
+        T item = this.mItemList.get(position);
         Toast.makeText(getActivity(), item.getItemTitle() + " Clicked!"
                 , Toast.LENGTH_SHORT).show();
+        mListener.onFragmentInteraction("" + position);
     }
 
     /**
@@ -147,6 +130,10 @@ public class ExampleItemFragment extends Fragment implements AbsListView.OnItemC
         }
     }
 
+    protected void addItem(T item){
+        mItemList.add(item);
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -158,7 +145,6 @@ public class ExampleItemFragment extends Fragment implements AbsListView.OnItemC
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         public void onFragmentInteraction(String id);
     }
 

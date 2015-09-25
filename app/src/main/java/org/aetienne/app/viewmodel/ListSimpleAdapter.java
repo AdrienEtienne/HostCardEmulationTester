@@ -12,11 +12,11 @@ import org.aetienne.app.R;
 
 import java.util.List;
 
-public class ExampleListAdapter extends ArrayAdapter {
+public class ListSimpleAdapter extends ArrayAdapter<ListItemSimpleAbstract>{
 
     private Context context;
 
-    public ExampleListAdapter(Context context, List items) {
+    public ListSimpleAdapter(Context context, List items) {
         super(context, android.R.layout.simple_list_item_1, items);
         this.context = context;
     }
@@ -26,6 +26,7 @@ public class ExampleListAdapter extends ArrayAdapter {
      */
     private class ViewHolder{
         TextView titleText;
+        TextView subtitleText;
     }
 
     /**
@@ -37,7 +38,7 @@ public class ExampleListAdapter extends ArrayAdapter {
      */
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
-        ExampleListItem item = (ExampleListItem)getItem(position);
+        ListItemSimpleAbstract item = (ListItemSimpleAbstract)getItem(position);
         View viewToUse = null;
 
         // This block exists to inflate the settings list item conditionally based on whether
@@ -45,9 +46,10 @@ public class ExampleListAdapter extends ArrayAdapter {
         LayoutInflater mInflater = (LayoutInflater) context
                 .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
-            viewToUse = mInflater.inflate(R.layout.example_list_item, null);
+            viewToUse = mInflater.inflate(R.layout.list_item_simple, null);
             holder = new ViewHolder();
             holder.titleText = (TextView)viewToUse.findViewById(R.id.titleTextView);
+            holder.subtitleText = (TextView)viewToUse.findViewById(R.id.subtitleTextView);
             viewToUse.setTag(holder);
         } else {
             viewToUse = convertView;
@@ -55,6 +57,7 @@ public class ExampleListAdapter extends ArrayAdapter {
         }
 
         holder.titleText.setText(item.getItemTitle());
+        holder.subtitleText.setText(item.getItemSubtitle());
         return viewToUse;
     }
 }

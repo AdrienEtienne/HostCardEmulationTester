@@ -1,23 +1,25 @@
 package org.aetienne.app.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 import android.content.Intent;
 import android.widget.Button;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 
 import org.aetienne.app.LocalData;
 import org.aetienne.app.R;
-import org.aetienne.app.activity.ExampleItemFragment.OnFragmentInteractionListener;
+import org.aetienne.app.activity.ListItemSimpleFragment.OnFragmentInteractionListener;
 import org.aetienne.app.animation.DropDownAnimation;
+import org.aetienne.app.modelAdapter.WorkspaceItemSimpleAdapter;
 import org.aetienne.app.service.ApiHCEApplication;
 import org.aetienne.app.service.entity.User;
 import org.aetienne.app.service.request.GetResponseCallback;
 import org.aetienne.app.service.entity.Workspace;
+import org.aetienne.app.viewmodel.ListItemSimpleAbstract;
 
 import java.util.List;
 
@@ -25,12 +27,12 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
 
     User mUser;
 
-    String tag = "main_activity";
+    private String TAG = "main_activity";
 
     private Button mButton;
     private View bandConnection;
 
-    private ExampleItemFragment mFrag;
+    private ListItemSimpleFragment mFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,13 +50,9 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         bandConnection = findViewById(R.id.layoutBandConnection);
 
         if (savedInstanceState == null) {
-            mFrag = new ExampleItemFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, (Fragment)mFrag)
-                    .commit();
+            mFrag = ListItemSimpleFragment.newInstance("Workspace");
+            getFragmentManager().beginTransaction().add(R.id.container, (Fragment) mFrag).commit();
         }
-
-
     }
 
     @Override
@@ -67,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     protected void onStop() {
         super.onStop();
 
-        ApiHCEApplication.getInstance().cancelPendingRequests(tag);
+        ApiHCEApplication.getInstance().cancelPendingRequests(TAG);
     }
 
     @Override
@@ -122,12 +120,18 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         ApiHCEApplication.getInstance().getWorkspaces(new GetResponseCallback<List<Workspace>>() {
             @Override
             public void onDataReceived(List<Workspace> lstWorkspaces) {
-                Toast.makeText(getApplicationContext(), "Get workspaces : " + lstWorkspaces.size(), Toast.LENGTH_SHORT).show();
-                getUser();
+                for(Workspace workspace: lstWorkspaces){
+                    mFrag.addItem(new WorkspaceItemSimpleAdapter(
+                            workspace.getId(),
+                            workspace.getName(),
+                            ""+workspace.getPort()));
+                }
+                //getUser();
             }
 
             @Override
             public void onFailure(REQUEST_ERROR error) {
+                mFrag.addItem(new ListItemSimpleAbstract("id", "No workspaces", "") {});
                 catchRequestError(error, "Get workspaces");
             }
         });
