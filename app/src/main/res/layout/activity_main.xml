@@ -37,7 +37,7 @@
             android:layout_centerHorizontal="true" />
 
         <fragment
-            android:layout_width="220dp"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:name="org.aetienne.app.activity.ExampleItemFragment"
             android:id="@+id/container"

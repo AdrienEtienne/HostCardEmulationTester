@@ -86,6 +86,12 @@ public class ExampleItemFragment extends Fragment implements AbsListView.OnItemC
         exampleListItemList.add(new ExampleListItem("Example 1"));
         exampleListItemList.add(new ExampleListItem("Example 2"));
         exampleListItemList.add(new ExampleListItem("Example 3"));
+        exampleListItemList.add(new ExampleListItem("Example 4"));
+        exampleListItemList.add(new ExampleListItem("Example 5"));
+        exampleListItemList.add(new ExampleListItem("Example 6"));
+        exampleListItemList.add(new ExampleListItem("Example 7"));
+        exampleListItemList.add(new ExampleListItem("Example 8"));
+        exampleListItemList.add(new ExampleListItem("Example 9"));
         mAdapter = new ExampleListAdapter(getActivity(), exampleListItemList);
     }
 

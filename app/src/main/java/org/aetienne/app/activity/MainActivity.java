@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     private Button mButton;
     private View bandConnection;
 
+    private ExampleItemFragment mFrag;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,10 +48,13 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         bandConnection = findViewById(R.id.layoutBandConnection);
 
         if (savedInstanceState == null) {
+            mFrag = new ExampleItemFragment();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, (Fragment)new ExampleItemFragment())
+                    .add(R.id.container, (Fragment)mFrag)
                     .commit();
         }
+
+
     }
 
     @Override
@@ -163,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         bandConnection.startAnimation(a);
     }
 
-    public void onFragmentInteraction(String id){
+    public void onFragmentInteraction(String position){
         getApplicationContext();
     }
 }

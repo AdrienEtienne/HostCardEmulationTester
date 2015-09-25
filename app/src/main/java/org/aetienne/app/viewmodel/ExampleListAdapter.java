@@ -15,7 +15,6 @@ import java.util.List;
 public class ExampleListAdapter extends ArrayAdapter {
 
     private Context context;
-    private boolean useList = true;
 
     public ExampleListAdapter(Context context, List items) {
         super(context, android.R.layout.simple_list_item_1, items);
@@ -46,12 +45,7 @@ public class ExampleListAdapter extends ArrayAdapter {
         LayoutInflater mInflater = (LayoutInflater) context
                 .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
-            if(useList){
-                viewToUse = mInflater.inflate(R.layout.example_list_item, null);
-            } else {
-                viewToUse = mInflater.inflate(R.layout.example_grid_item, null);
-            }
-
+            viewToUse = mInflater.inflate(R.layout.example_list_item, null);
             holder = new ViewHolder();
             holder.titleText = (TextView)viewToUse.findViewById(R.id.titleTextView);
             viewToUse.setTag(holder);
