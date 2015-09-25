@@ -2,7 +2,7 @@ package org.aetienne.app.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +11,15 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.aetienne.app.R;
 import org.aetienne.app.activity.dummy.DummyContent;
+import org.aetienne.app.viewmodel.ExampleListAdapter;
+import org.aetienne.app.viewmodel.ExampleListItem;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -30,6 +36,8 @@ public class ExampleItemFragment extends Fragment implements AbsListView.OnItemC
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private List exampleListItemList; // at the top of your fragment list
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -74,9 +82,11 @@ public class ExampleItemFragment extends Fragment implements AbsListView.OnItemC
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        // TODO: Change Adapter to display your content
-        mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);
+        exampleListItemList = new ArrayList();
+        exampleListItemList.add(new ExampleListItem("Example 1"));
+        exampleListItemList.add(new ExampleListItem("Example 2"));
+        exampleListItemList.add(new ExampleListItem("Example 3"));
+        mAdapter = new ExampleListAdapter(getActivity(), exampleListItemList);
     }
 
     @Override
@@ -113,11 +123,9 @@ public class ExampleItemFragment extends Fragment implements AbsListView.OnItemC
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
-        }
+        ExampleListItem item = (ExampleListItem) this.exampleListItemList.get(position);
+        Toast.makeText(getActivity(), item.getItemTitle() + " Clicked!"
+                , Toast.LENGTH_SHORT).show();
     }
 
     /**

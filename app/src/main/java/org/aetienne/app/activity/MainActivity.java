@@ -8,11 +8,11 @@ import android.view.View;
 import android.widget.Toast;
 import android.content.Intent;
 import android.widget.Button;
-import android.os.Handler;
-import java.util.ArrayList;
+import android.support.v4.app.Fragment;
 
 import org.aetienne.app.LocalData;
 import org.aetienne.app.R;
+import org.aetienne.app.activity.ExampleItemFragment.OnFragmentInteractionListener;
 import org.aetienne.app.animation.DropDownAnimation;
 import org.aetienne.app.service.ApiHCEApplication;
 import org.aetienne.app.service.entity.User;
@@ -21,7 +21,7 @@ import org.aetienne.app.service.entity.Workspace;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener{
 
     User mUser;
 
@@ -44,6 +44,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
         bandConnection = findViewById(R.id.layoutBandConnection);
+
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, (Fragment)new ExampleItemFragment())
+                    .commit();
+        }
     }
 
     @Override
@@ -155,5 +161,9 @@ public class MainActivity extends AppCompatActivity {
         a.setDuration(600);
         bandConnection.setVisibility(bandConnection.INVISIBLE);
         bandConnection.startAnimation(a);
+    }
+
+    public void onFragmentInteraction(String id){
+        getApplicationContext();
     }
 }
