@@ -32,8 +32,6 @@ import java.util.List;
  */
 public class ListItemSimpleFragment<T extends ListItemSimpleAbstract> extends Fragment implements AbsListView.OnItemClickListener {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_TYPE = "type";
 
     private List<T> mItemList; // at the top of your fragment list
@@ -136,6 +134,11 @@ public class ListItemSimpleFragment<T extends ListItemSimpleAbstract> extends Fr
         mItemList.add(item);
     }
 
+    protected void clear(){
+        mItemList.clear();
+        mAdapter = new ListSimpleAdapter(getActivity(), mItemList);
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -147,7 +150,7 @@ public class ListItemSimpleFragment<T extends ListItemSimpleAbstract> extends Fr
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        public void onFragmentInteraction(String id);
+        void onFragmentInteraction(String id);
     }
 
 }

@@ -28,20 +28,29 @@
         android:layout_height="match_parent"
         android:weightSum="1">
 
-        <Button
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Button"
-            android:id="@+id/button"
-            android:layout_alignTop="@+id/titleTextView"
-            android:layout_centerHorizontal="true" />
+            android:text="@string/lbl_workspace_active"
+            android:id="@+id/textView" />
 
         <fragment
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:name="org.aetienne.app.activity.ListItemSimpleFragment"
-            android:id="@+id/container"
-            android:layout_weight="0.27" />
+            android:id="@+id/container"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_workspace_not_active"
+            android:id="@+id/textView4" />
+
+        <fragment
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:name="org.aetienne.app.activity.ListItemSimpleFragment"
+            android:id="@+id/container2"/>
 
 
     </LinearLayout>

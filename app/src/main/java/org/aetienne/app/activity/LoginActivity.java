@@ -17,20 +17,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
-
-import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +61,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
     // UI references.
     private AutoCompleteTextView mUsernameView;
-    private EditText mPasswordView;
+    private EditText mCodeView;
     private View mProgressView;
     private View mUsernameLoginFormView;
     private View mSignOutButtons;
@@ -79,7 +74,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         // Set up the login form.
         mUsernameView = (AutoCompleteTextView) findViewById(R.id.username);
-        mPasswordView = (EditText) findViewById(R.id.password);
+        mCodeView = (EditText) findViewById(R.id.password);
 
         Button mSignInButton = (Button) findViewById(R.id.username_sign_in_button);
         mSignInButton.setOnClickListener(new OnClickListener() {
@@ -96,6 +91,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
         mUsernameLoginFormView = findViewById(R.id.username_login_form);
+
+        User user = LocalData.getUser(getApplicationContext());
+        if(user != null){
+            mUsernameView.setText(user.getName());
+            mCodeView.setText(user.getCode());
+        }
     }
 
     /**
@@ -110,19 +111,19 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         // Reset errors.
         mUsernameView.setError(null);
-        mPasswordView.setError(null);
+        mCodeView.setError(null);
 
         // Store values at the time of the login attempt.
         String username = mUsernameView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        String code = mCodeView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
+        if (!TextUtils.isEmpty(code) && !isCodeValid(code)) {
+            mCodeView.setError(getString(R.string.error_invalid_password));
+            focusView = mCodeView;
             cancel = true;
         }
 
@@ -147,12 +148,15 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             showProgress(true);
 
             final LoginActivity that = this;
-            ApiHCEApplication.getInstance().AuthenticateUser(new User(username, password),new GetResponseCallback<User>() {
+
+            User user = new User(username, code);
+            LocalData.setUser(getApplicationContext(), user);
+
+            ApiHCEApplication.getInstance().AuthenticateUser(user,new GetResponseCallback<User>() {
                 @Override
                 public void onDataReceived(User user) {
                     showProgress(false);
                     Toast.makeText(getApplicationContext(), "User found" , Toast.LENGTH_SHORT).show();
-                    LocalData.setUser(getApplicationContext(), user);
                     Intent intent = new Intent(that, MainActivity.class);
                     that.startActivity(intent);
                     that.finish();
@@ -163,7 +167,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                     showProgress(false);
                     if(error == REQUEST_ERROR.NO_CONNECTION){
                         Toast.makeText(getApplicationContext(), "Fail to connect to server.", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(that, SettingsActivity.class);
+                        Intent intent = new Intent(that, MainActivity.class);
                         that.startActivity(intent);
                     }
                     else{
@@ -180,7 +184,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         return username.length()>3;
     }
 
-    private boolean isPasswordValid(String password) {
+    private boolean isCodeValid(String password) {
         return password.length() > 3;
     }
 
@@ -318,8 +322,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             if (success) {
                 finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                mCodeView.setError(getString(R.string.error_incorrect_password));
+                mCodeView.requestFocus();
             }
         }
 

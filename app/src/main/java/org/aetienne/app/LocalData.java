@@ -35,6 +35,7 @@ public class LocalData {
         SharedPreferences settings = context.getSharedPreferences(FILE_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(USER_NAME, user.getName());
+        editor.putString(USER_CODE, user.getCode());
 
         // Apply the edits!
         editor.apply();

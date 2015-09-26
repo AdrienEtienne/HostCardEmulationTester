@@ -34,54 +34,26 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     private Button mButton;
     private View bandConnection;
 
-    private ListItemSimpleFragment mFrag;
+    final private ListItemSimpleFragment mFrag = ListItemSimpleFragment.newInstance("Workspace");
+    //final private ListItemSimpleFragment mFragInactive = ListItemSimpleFragment.newInstance("WorkspaceInactive");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mButton = (Button) findViewById(R.id.button);
-        mButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getInformation();
-            }
-        });
-
         bandConnection = findViewById(R.id.layoutBandConnection);
 
         if (savedInstanceState == null) {
-            mFrag = ListItemSimpleFragment.newInstance("Workspace");
-            getFragmentManager().beginTransaction().add(R.id.container, (Fragment) mFrag).commit();
+            getFragmentManager().beginTransaction().add(R.id.container, mFrag).commit();
+            //getFragmentManager().beginTransaction().add(R.id.container2, mFragInactive).commit();
         }
-
-        List<Workspace> lst = new ArrayList<Workspace>();
-        lst.add(new Workspace("first", true));
-        setWorkspaces(lst);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mFrag.addItem(new WorkspaceItemSimpleAdapter("delay onCreate","delay onCreate","delay onCreate"));
-            }
-        }, 1000);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //getInformation();
-        List<Workspace> lst = new ArrayList<Workspace>();
-        lst.add(new Workspace("onstart", true));
-        setWorkspaces(lst);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mFrag.addItem(new WorkspaceItemSimpleAdapter("delay onResume", "delay onResume", "delay onResume"));
-            }
-        }, 1000);
+        getInformation();
     }
 
     @Override
@@ -107,8 +79,14 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent settingsIntent = new Intent(this, SettingsActivity.class);
-            this.startActivity(settingsIntent);
+            Intent intent = new Intent(this, SettingsActivity.class);
+            this.startActivity(intent);
+            return true;
+        }
+
+        if (id == R.id.action_logout) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            this.startActivity(intent);
             return true;
         }
 
@@ -118,15 +96,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     void setConfiguration(){
         User user = LocalData.getUser(this);
         mUser = user;
-    }
-
-    void setWorkspaces(List<Workspace> workspaces){
-        for(Workspace workspace: workspaces){
-            mFrag.addItem(new WorkspaceItemSimpleAdapter(
-                    workspace.getId(),
-                    workspace.getName(),
-                    ""+workspace.getPort()));
-        }
     }
 
     void getInformation(){
@@ -149,17 +118,35 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
     }
 
     void getWorkspaces(){
+        mFrag.clear();
+
         ApiHCEApplication.getInstance().getWorkspaces(new GetResponseCallback<List<Workspace>>() {
             @Override
             public void onDataReceived(List<Workspace> lstWorkspaces) {
                 Toast.makeText(getApplicationContext(), "Get workspaces : " + lstWorkspaces.size(), Toast.LENGTH_SHORT).show();
-                //setWorkspaces(lstWorkspaces);
-                //getUser();
+
+                for(Workspace workspace:lstWorkspaces){
+                    if(workspace.isActive())
+                    {
+                        mFrag.addItem(new WorkspaceItemSimpleAdapter(
+                                workspace.getId(),
+                                workspace.getName(),
+                                ""+ workspace.getPort()));
+                    }
+                    else{
+                        /*mFragInactive.addItem(new WorkspaceItemSimpleAdapter(
+                                workspace.getId(),
+                                workspace.getName(),
+                                ""+ workspace.getPort()));*/
+                    }
+
+                }
+
+                getUser();
             }
 
             @Override
             public void onFailure(REQUEST_ERROR error) {
-                mFrag.addItem(new ListItemSimpleAbstract("id", "No workspaces", "") {});
                 catchRequestError(error, "Get workspaces");
             }
         });
